@@ -6,8 +6,8 @@ The following use cases are provided with a sample dataset, and with a project b
 * [Banking Account Closure](https://github.com/IBM/processmining/tree/main/Datasets/BankingAccountClosure). Demonstrate the combination of process mining and task mining to get finer details on business activities, and to recommend best RPA investments to simulate.
 * [Volvo IT Challenge](https://github.com/IBM/processmining/tree/main/Datasets/VolvoITChallenge2013). A support ticketing process from Volvo IT.
 
-## Loading project backup files (.IDP)
-Each dataset is provided with a process mining project backup file (.IDP).
+## Loading project backup files (.idp)
+Each dataset is provided with a process mining project backup file (.idp).
 1. Upload the event log file (CSV). Do not do the mapping
 1. From the top-right menu, select 'Manage History', load the IDP file and apply. This step will automatically map the fields, update the project settings, load the dashboards and the reference model.
 
