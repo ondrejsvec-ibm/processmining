@@ -1,0 +1,50 @@
+{
+    "id": null,
+    "name": "RetrieveVariable",
+    "description": "",
+    "version": "1.0.0",
+    "author": "Account Maintenance",
+    "inputSchema": [
+        {
+            "name": "Username",
+            "type": "string",
+            "description": null
+        },
+        {
+            "name": "APIKey",
+            "type": "string",
+            "description": null
+        },
+        {
+            "name": "URL",
+            "type": "string",
+            "description": null
+        },
+        {
+            "name": "VariableName",
+            "type": "string",
+            "description": null
+        },
+        {
+            "name": "ProcessName",
+            "type": "string",
+            "description": null
+        },
+        {
+            "name": "Organization",
+            "type": "string",
+            "description": null
+        },
+        {
+            "name": "Attribute",
+            "type": "string",
+            "description": null
+        }
+    ],
+    "files": {
+        "view.html": "<input type=\"hidden\" id=\"username\" value={{data.username}}>\n<input type=\"hidden\" id=\"apiKey\" value={{data.apiKey}}>\n<input type='hidden' id='url' value={{data.url}}>\n<input type='hidden' id='variableName' value={{data.variableName}}>\n<input type='hidden' id='processName' value={{data.processName}}>\n<input type='hidden' id='org' value={{data.org}}>\n<input type='hidden' id='attribute' value={{data.attribute}}>\n \n<div class='header' id='myHeader'>\n<center>\n  <div>\n \t<h3 id='description'/>\n  </div>\n  </center>\n</div>\n  \n<script>\n  \n  var intervalId = window.setInterval(function(){\n  \tretrieveData();\n  }, 5000);\n\n  setTimeout(() => { retrieveData(); }, 1000);\n  \n  function retrieveData() {\n    var username = document.getElementById('username').value;\n  \tvar apiKey = document.getElementById('apiKey').value;\n    var url = document.getElementById('url').value;\n  \tvar variableName = document.getElementById('variableName').value;\n  \tvar processName = document.getElementById('processName').value;\n  \tvar org = document.getElementById('org').value;\n    var attribute = document.getElementById('attribute').value;\n    \n  \n    var xmlhttp = new XMLHttpRequest();\n    xmlhttp.onreadystatechange = function() {\n    \tif (this.readyState == 4 && this.status == 200) {\n    \t\tvar myObj = JSON.parse(this.responseText);\n\t        var sign = myObj.sign;\n\t\t\tvar xmlhttp1 = new XMLHttpRequest();\n            xmlhttp1.onreadystatechange = function() {\n                if (this.readyState == 4 && this.status == 200) {\n                    var variable = JSON.parse(this.responseText);\n  \t\t\t\t\tdocument.getElementById('description').innerHTML = variable.data.value[`${attribute}`];\n                }\n            };\n            xmlhttp1.open(\"GET\", `${url}/integration/processes/${processName}/variables/${variableName}?org=${org}`, false);\n            xmlhttp1.setRequestHeader(\"Authorization\", `Bearer: ${sign}`);\n\n            xmlhttp1.send();\n  \t\t\t\n\t    }\n    };\n    xmlhttp.open(\"POST\", `${url}/integration/sign`, false);\n    xmlhttp.setRequestHeader(\"Content-Type\", \"application/json\");\n\n    xmlhttp.send(`{\"uid\": \"${username}\", \"apiKey\": \"${apiKey}\"}`);\n  }\n  \n</script>\n",
+        "backend.js": "(function(){\nreturn {\n\tinit: function(params) {\n\t\tthis.username = params.Username;\n      \tthis.apiKey = params.APIKey;\n      \tthis.url = params.URL;\n\t    this.variableName = params.VariableName;\n\t    this.processName = params.ProcessName;\n\t    this.org = params.Organization;\n\t    this.attribute = params.Attribute;\n\n\t},\n\n\tupdate: function(trace) {\n\n\t\treturn;\n\n\t},\n\t\n\tfinalize: function(output) {\n      output['username'] = this.username;\n      output['apiKey'] = this.apiKey;\n\t  output['url'] = this.url;\n\t  output['variableName'] = this.variableName;\n\t  output['processName'] = this.processName;\n\t  output['org'] = this.org;\n\t  output['attribute'] = this.attribute;\n\t}\n};})();",
+        "frontend.js": "return {\n\tinit: function(context){\n\t\t\n\t},\n\n\tupdate: function(data, context){\n      context.scope.data = data;\n\n\t},\n\n\tresize: function(size, context){\n\n\t}\n};",
+        "style.css": "*{\n\tcolor:#333;\n}"
+    }
+}

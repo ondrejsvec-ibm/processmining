@@ -1,0 +1,20 @@
+{
+    "id": null,
+    "name": "EventList",
+    "description": "",
+    "version": "1.0.0",
+    "author": "Account Maintenance",
+    "inputSchema": [
+        {
+            "name": "MaxRows",
+            "type": "string",
+            "description": "Maximum number of rows to show"
+        }
+    ],
+    "files": {
+        "view.html": "<input type=\"hidden\" id=\"events\" value={{data.events}}>\n<input type=\"hidden\" id=\"maxRows\" value={{data.maxRows}}>\n  \n<table id=\"myTable\">\n</table>\n\n<script>\n  \n  var intervalId = window.setInterval(function(){\n  \ttableCreate();\n  }, 5000);\n\n  \n  setTimeout(() => { tableCreate(); }, 1000);\n  \n  function tableCreate() {\n    var table = document.getElementById(\"myTable\");\n\tvar events = document.getElementById('events').value;\n\tvar maxRows = document.getElementById('maxRows').value;\n    var caseArray = JSON.parse(\"[\" + events + \"]\");\n  \tvar rowCount = table.rows.length;\n  \tvar totalRows = caseArray[0].length;\n  \t\n  \ttable.innerHTML = \"\";\n    \n  \tfor(let event of caseArray[0]){\n  \t\tvar row = table.insertRow(0);\n  \t\tvar counter = 0;\n  \t\tvar cell1 = row.insertCell(counter++);\n\t  \tcell1.innerHTML = totalRows--;\n  \t\tfor(let data of event){\n\t    \tvar cell1 = row.insertCell(counter++);\n\t  \t\tcell1.innerHTML = data;\n  \t\t}\n\n\t}\n  \tvar headerRow = table.insertRow(0);\n\tvar headearCell0 = headerRow.insertCell(0);\n  \theadearCell0.innerHTML = '<b>Count</b>';\n  \tvar headearCell1 = headerRow.insertCell(1);\n\theadearCell1.innerHTML = '<b>CaseId</b>';\n  \tvar headearCell2 = headerRow.insertCell(2);\n\theadearCell2.innerHTML = '<b>EventId</b>';\n  \tvar headearCell3 = headerRow.insertCell(3);\n  \theadearCell3.innerHTML = '<b>StartTime (Descending)</b>';\n  \tvar headearCell4 = headerRow.insertCell(4);\n\theadearCell4.innerHTML = '<b>Activity</b>';\n    \n    \n  }\n \n</script>\n \n",
+        "backend.js": "(function(){\nreturn {\n\tinit: function(params) {\n\t\tthis.events = [];\n      \tif(params.MaxRows == null){\n          params.MaxRows = 200;\n        }\n\t\tthis.maxRows = parseInt(params.MaxRows);\n\t},\n\n\tupdate: function(trace) {\n\n\t\tif(trace.getDiscarded == 1) {\n\t\t\treturn;\n\t\t}\n      \tfor (var j = 0; j < trace.size(); j++) {\n          if (events.length > this.maxRows) {\n            return;\n          } \n          var event = trace.get(j);\n          var line = [];\n          line.push(event.getCaseId());\n          line.push(event.getEventLogIndex());\n          line.push(new Date(event.getStartTime()).toISOString());\n          line.push(event.getEventClass());\n          this.events.push(line);\n        }\n      \t\n\t      \n    \t\n\t},\n\t\n\tfinalize: function(output) {\n\t\toutput['events'] = this.events;\n      \toutput['maxRows'] = this.maxRows;\n\t}\n};})();",
+        "frontend.js": "return {\n\tinit: function(context){\n\t\t\n\t},\n\n\tupdate: function(data, context){\n\t\tcontext.scope.data = data;\n\t},\n\n\tresize: function(size, context){\n\n\t}\n};",
+        "style.css": "*{\n\tcolor:#333;\n}\n\ntable {\n  font-family: arial, sans-serif;\n  border-collapse: collapse;\n  width: 100%;\n}\n\ntd, th {\n  border: 1px solid #dddddd;\n  text-align: left;\n  padding: 8px;\n}\n\ntr:nth-child(even) {\n  background-color: #dddddd;\n}"
+    }
+}
